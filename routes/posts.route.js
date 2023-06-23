@@ -3,6 +3,7 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/auth-middleware");
 const { Posts } = require("../models");
 
+
 // 게시글 생성 API
 // 9. 토큰을 검사하여, 유효한 토큰일 경우에만 게시글 작성 가능
 router.post("/posts", authMiddleware, async (req, res) => {
@@ -41,6 +42,27 @@ router.get("/posts/:postId", async (req, res) => {
     });
 
     return res.status(200).json({ data: post });
+});
+
+// 게시글 수정 API
+router.put("/posts/:postId", async (req, res) => {
+    const { postId } = req.params;
+    const { title, content, password } = req.body;
+
+    const post = await Posts.findOne({
+        where: { postId: postId },
+    });
+
+    if (!post) {
+        return res.status(404).json({
+            message: "게시글이 존재하지 않습니다.",
+        })
+    } else if (post.password !== password) {
+        return res.status(401).json({
+            message: "게시글의 비밀번호와 전달받은 비밀번호가 일치하지 않습니다.",
+        })
+    }
+
 });
 
 module.exports = router;

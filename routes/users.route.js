@@ -80,9 +80,9 @@ router.post("/login", async (req, res) => {
     }, "customized_secret_key");
 
     // 쿠키를 발급
+    // 6. 로그인 성공 시, 로그인에 성공한 유저의 정보를 JWT를 활용하여 클라이언트에게 Cookie로 전달하기
     res.cookie("authorization", `Bearer ${token}`);
 
-    // 6. 로그인 성공 시, 로그인에 성공한 유저의 정보를 JWT를 활용하여 클라이언트에게 Cookie로 전달하기
     return res.status(200).json({ message: "로그인에 성공하였습니다." });
 });
 
