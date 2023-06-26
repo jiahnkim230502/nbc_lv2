@@ -25,5 +25,4 @@ module.exports = async (req, res, next) => {
             message: "비정상적인 접근입니다."
         });
     };
-
 };

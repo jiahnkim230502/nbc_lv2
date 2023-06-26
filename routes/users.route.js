@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
         where: { nickname }
     })
     // 5. 로그인 버튼을 누른 경우 닉네임과 비밀번호가 데이터베이스에 등록됐는지 확인한 뒤, 하나라도 맞지 않는 정보가 있다면 "닉네임 또는 패스워드를 확인해주세요."라는 에러 메세지를 response에 포함하기
-    if (!isPassword || !isNickname) {
+    if (!isPassword || isNickname) {
         return res.status(409).json({ message: "닉네임 또는 패스워드를 확인해주세요." });
     };
 
