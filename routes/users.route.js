@@ -7,7 +7,7 @@ const authMiddleware = require("../middlewares/auth-middleware");
 
 // 회원가입 API
 router.post("/users", async (req, res) => {
-    const { email, password, checkPassword, name, age, gender, profileImage, nickname } = req.body;
+    const { email, password, checkPassword, name, age, gender, nickname } = req.body;
     const isExistUser = await Users.findOne({
         where: {
             email: email,
@@ -80,7 +80,7 @@ router.post("/login", async (req, res) => {
 
 // 사용자 조회 API
 router.get("/users/:userId", async (req, res) => {
-    const { userId } = req.params;
+
 
     // 사용자 테이블과 사용자 정보 테이블에 있는 데이터를 가지고 와야함
     const user = await Users.findOne({

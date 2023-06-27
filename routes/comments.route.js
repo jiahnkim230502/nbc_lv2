@@ -72,6 +72,7 @@ router.put("/posts/:postId/comments/:commentId", authMiddleware, async (req, res
 });
 
 // 게시글 삭제 API
+// 로그인 토큰을 검사하여, 해당 사용자가 작성한 댓글만 삭제 가능
 router.delete("/posts/:postId/comments/:commentId", authMiddleware, async (req, res) => {
     const { commentId } = req.params;
     const { userId } = res.locals.user;
