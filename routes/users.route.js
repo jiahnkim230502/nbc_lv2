@@ -1,7 +1,9 @@
 const express = require("express");
+const router = express.Router();
 const jwt = require("jsonwebtoken");
 const { Users, UserInfos } = require("../models");
-const router = express.Router();
+const authMiddleware = require("../middlewares/auth-middleware");
+
 
 // 회원가입 API
 router.post("/users", async (req, res) => {
@@ -55,14 +57,12 @@ router.post("/login", async (req, res) => {
     const user = await Users.findOne({
         where: { email }
     });
-    const isPassword = await Users.findOne({
-        where: { password }
+    const userInfo = await Users.findOne({
+        attributes: ['nickname', 'password'],
+        where: { email }
     });
-    const isNickname = await Users.findOne({
-        where: { nickname }
-    })
     // 5. 로그인 버튼을 누른 경우 닉네임과 비밀번호가 데이터베이스에 등록됐는지 확인한 뒤, 하나라도 맞지 않는 정보가 있다면 "닉네임 또는 패스워드를 확인해주세요."라는 에러 메세지를 response에 포함하기
-    if (!isPassword || isNickname) {
+    if (!userInfo.password || nickname !== userInfo.nickname) {
         return res.status(409).json({ message: "닉네임 또는 패스워드를 확인해주세요." });
     };
 
