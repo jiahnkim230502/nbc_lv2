@@ -72,7 +72,7 @@ router.post("/login", async (req, res) => {
         return res.status(401).json({ message: "해당하는 사용자가 존재하지 않습니다." });
     } else if (user.password !== password) {
         return res.status(401).json({ message: "비밀번호가 일치하지 않습니다." })
-    }
+    };
 
     // jwt를 생성하고
     const token = jwt.sign({

@@ -46,6 +46,7 @@ router.get("/posts/:postId", async (req, res) => {
     return res.status(200).json({ data: post });
 });
 
+// 토큰을 검사하여, 해당 사용자가 작성한 게시글만 수정 가능
 // 게시글 수정 API
 router.put("/posts/:postId", authMiddleware, async (req, res) => {
     const { userId } = res.locals.user;
@@ -56,8 +57,8 @@ router.put("/posts/:postId", authMiddleware, async (req, res) => {
         where: { userId, postId },
     });
 
-    if(!post) {
-        return (res.status(404).json({message: "사용자가 일치하지 않습니다."}));
+    if (!post) {
+        return (res.status(404).json({ message: "사용자가 일치하지 않습니다." }));
     };
 
     // 게시글 수정 시작
@@ -71,6 +72,32 @@ router.put("/posts/:postId", authMiddleware, async (req, res) => {
     );
 
     return res.status(200).json({ message: "게시글이 수정되었습니다." });
+});
+
+// 토큰을 검사하여, 해당 사용자가 작성한 게시글만 삭제 가능
+// 게시글 삭제 API
+router.delete("/posts/:postId", authMiddleware, async (req, res) => {
+    const { postId } = req.params;
+    const { userId } = res.locals.user;
+
+    const post = await Posts.findOne({
+        where: { postId, userId },
+    });
+
+    if (!post) {
+        return res.status(404).json({
+            message: "게시글이 존재하지 않습니다.",
+        })
+    };
+
+    // 게시글 삭제
+    await Posts.destroy({
+        where: {
+            [Op.and]: [{ postId }, { userId }]
+        }
+    });
+
+    return res.status(200).json({ message: "게시글이 삭제되었습니다." });
 });
 
 module.exports = router;
