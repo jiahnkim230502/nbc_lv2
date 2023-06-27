@@ -62,16 +62,8 @@ router.post("/login", async (req, res) => {
         where: { email }
     });
     // 5. 로그인 버튼을 누른 경우 닉네임과 비밀번호가 데이터베이스에 등록됐는지 확인한 뒤, 하나라도 맞지 않는 정보가 있다면 "닉네임 또는 패스워드를 확인해주세요."라는 에러 메세지를 response에 포함하기
-    if (!userInfo.password || nickname !== userInfo.nickname) {
+    if (userInfo.password !== password || userInfo.nickname !== nickname) {
         return res.status(409).json({ message: "닉네임 또는 패스워드를 확인해주세요." });
-    };
-
-    // 해당하는 사용자가 존재하는가
-    // 해당하는 사용자의 비밀번호가 존재하는가.
-    if (!user) {
-        return res.status(401).json({ message: "해당하는 사용자가 존재하지 않습니다." });
-    } else if (user.password !== password) {
-        return res.status(401).json({ message: "비밀번호가 일치하지 않습니다." })
     };
 
     // jwt를 생성하고

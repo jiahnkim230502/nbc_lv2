@@ -81,19 +81,23 @@ router.delete("/posts/:postId", authMiddleware, async (req, res) => {
     const { userId } = res.locals.user;
 
     const post = await Posts.findOne({
-        where: { postId, userId },
+        where: { postId },
     });
 
     if (!post) {
         return res.status(404).json({
             message: "게시글이 존재하지 않습니다.",
         })
+    } else if (post.UserId !== userId) {
+        return res.status(403).json({
+            message: "게시글 삭제 권한이 있는 사용자가 아닙니다.",
+        });
     };
 
     // 게시글 삭제
     await Posts.destroy({
         where: {
-            [Op.and]: [{ postId }, { userId }]
+            [Op.and]: [{ userId }, { postId }]
         }
     });
 
